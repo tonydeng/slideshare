@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- saved from url=(0095)http://192.168.2.114:8080/md/a-review-of-plugin-git-development-based-on-the-command-line.md#26 -->
 <html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
     <title>基于命令行的Git Plugin开发回顾 - By Tony Deng</title>
@@ -26,7 +27,7 @@
 <body style="opacity: 1;">
 <div class="slides">
     <slides id="container">
-        <slide class="slide fill pageup current" style="background-image:url(&#39;https://www.atlassian.com/git/images/atlassian-getting-git-right.jpg&#39;)" data-transition="cover-diamond"><section class="slide-wrapper"><article class="flexbox vcenter">
+        <slide class="slide fill" style="background-image:url(&#39;https://www.atlassian.com/git/images/atlassian-getting-git-right.jpg&#39;)" data-transition="cover-diamond"><section class="slide-wrapper"><article class="flexbox vcenter">
 <h1>基于命令行的Git Plugin开发回顾</h1>
 <h2>-- git-toolkit</h2>
 <p><small>Tony Deng</small></p>
@@ -34,13 +35,13 @@
 <p><a href="https://twitter.com/wolfdeng" target="_blank">https://twitter.com/wolfdeng</a></p>
 
 </article></section></slide>
-<slide class="slide pageup next" data-transition="earthquake"><section class="slide-wrapper"><article class="flexbox vcenter">
+<slide class="slide" data-transition="earthquake"><section class="slide-wrapper"><article class="flexbox vcenter">
 <h1>开发git toolkit的初衷</h1>
 <p>人类懒惰的本性和不满足的本性是趋势科技发展的源泉......</p>
 <p><a href="http://www.ruanyifeng.com/blog/2016/01/commit_message_change_log.html" target="_blank">阮一峰《Commit message 和 Change log 编写指南》</a></p>
 
 </article></section></slide>
-<slide class="slide pageup far-next" data-transition="cards"><section class="slide-wrapper"><article class="flexbox vcenter">
+<slide class="slide" data-transition="cards"><section class="slide-wrapper"><article class="flexbox vcenter">
 <h1>Commit message</h1>
 
 </article></section></slide>
@@ -49,7 +50,7 @@
 
 </article></section></slide>
 <slide class="slide" data-transition="move"><section class="slide-wrapper"><article>
-<img src="../images/git-toolkit/commit_message_2.jpg" alt="commit_message">
+<img src="../images/revision_contorl/commit_message_2.jpg" alt="commit_message">
 
 </article></section></slide>
 <slide class="slide" data-transition="newspaper"><section class="slide-wrapper"><article>
@@ -63,7 +64,6 @@
 <slide class="slide" data-transition="slide2"><section class="slide-wrapper"><article>
 <p>可以试试这些命令</p>
 <pre><code class="hljs applescript">git <span class="hljs-command">log</span> git-toolkit-<span class="hljs-number">1.0</span> <span class="hljs-comment">--pretty=format:%s</span>
-</code></pre><pre><code class="hljs applescript">git <span class="hljs-command">log</span> git-toolkit-<span class="hljs-number">1.0</span> <span class="hljs-comment">--pretty=format:%s</span>
 </code></pre><pre><code class="hljs cpp">git <span class="hljs-built_in">log</span> git-toolkit-<span class="hljs-number">1.0</span>...git-toolkit-<span class="hljs-number">1.0</span><span class="hljs-number">.1</span>  --pretty=format:%s
 </code></pre><pre><code class="hljs perl">git <span class="hljs-keyword">log</span> git-toolkit-<span class="hljs-number">1.0</span> --pretty=<span class="hljs-keyword">format</span>:<span class="hljs-variable">%s</span> --<span class="hljs-keyword">grep</span> feat
 </code></pre><pre><code class="hljs stata">git <span class="hljs-keyword">log</span> git-toolkit-1.0 --pretty=<span class="hljs-keyword">format</span>:'&lt;<span class="hljs-keyword">li</span>&gt; &lt;a href=<span class="hljs-string">"http://github.com/tonydeng/git-toolkit/commit/%H"</span>&gt;<span class="hljs-keyword">view</span> commit &amp;bull;&lt;/a&gt; %s&lt;/<span class="hljs-keyword">li</span>&gt; ' --<span class="hljs-literal">reverse</span>
@@ -71,11 +71,6 @@
 </article></section></slide>
 <slide class="slide" data-transition="slide3"><section class="slide-wrapper"><article>
 <img src="../images/git-toolkit/changelog.png" alt="changelog">
-
-</article></section></slide>
-<slide class="slide" data-transition="horizontal3d"><section class="slide-wrapper"><article class="flexbox vcenter">
-<h1>Git Toolkit介绍</h1>
-<p><a href="https://tonydeng.github.io/git-toolkit/" target="_blank">https://tonydeng.github.io/git-toolkit/</a></p>
 
 </article></section></slide>
 <slide class="slide" data-transition="horizontal"><section class="slide-wrapper"><article class="flexbox vcenter">
@@ -161,17 +156,18 @@ total <span class="hljs-number">224</span>
 </ol>
 
 </article></section></slide>
-<slide class="slide" data-transition="kontext"><section class="slide-wrapper"><article class="flexbox vcenter">
+<slide class="slide" data-transition="horizontal3d"><section class="slide-wrapper"><article class="flexbox vcenter">
 <h1>Git Toolkit介绍</h1>
+<p><a href="https://tonydeng.github.io/git-toolkit/" target="_blank">https://tonydeng.github.io/git-toolkit/</a></p>
 
 </article></section></slide>
 <slide class="slide" data-transition="vkontext"><section class="slide-wrapper"><article>
 <h2>安装</h2>
 <h4>1. 使用curl</h4>
-<pre><code class="bash hljs">sh -c <span class="hljs-string">"<span class="hljs-variable">$(curl -fsSL https://raw.githubusercontent.com/tonydeng/git-toolkit/master/installer.sh)</span>"</span>
+<pre><code class="bash hljs">bash -c <span class="hljs-string">"<span class="hljs-variable">$(curl -fsSL https://raw.githubusercontent.com/tonydeng/git-toolkit/master/installer.sh)</span>"</span>
 </code></pre>
 <h4>2. 使用wget</h4>
-<pre><code class="bash hljs">sh -c <span class="hljs-string">"<span class="hljs-variable">$(wget https://raw.githubusercontent.com/tonydeng/git-toolkit/master/installer.sh -O -)</span>"</span>
+<pre><code class="bash hljs">bash -c <span class="hljs-string">"<span class="hljs-variable">$(wget https://raw.githubusercontent.com/tonydeng/git-toolkit/master/installer.sh -O -)</span>"</span>
 </code></pre>
 
 </article></section></slide>
@@ -209,28 +205,28 @@ total <span class="hljs-number">224</span>
 </code></pre>
 </article></section></slide>
 <slide class="slide" data-transition="newspaper"><section class="slide-wrapper"><article>
-<pre><code class="bash hljs">➜  note git:(master) ✗ git ci
+<pre><code class="hljs cpp">➜  note git:(master) ✗ git ci
 选择您正在提交的类型:
-        <span class="hljs-number">1</span>. backlog: 开始一个新的backlog
-        <span class="hljs-number">2</span>. feat: 新功能（feature）
-        <span class="hljs-number">3</span>. fix: 修补bug
-        <span class="hljs-number">4</span>. docs: 文档（documentation）
-        <span class="hljs-number">5</span>. style: 格式（不影响代码运行的变动）
-        <span class="hljs-number">6</span>. refactor: 重构（即不是新增功能，也不是修改bug的代码变动）
-        <span class="hljs-number">7</span>. <span class="hljs-built_in">test</span>: 增加测试
-        <span class="hljs-number">8</span>. chore: 构建过程或辅助工具的变动
-        <span class="hljs-number">0</span>. quit: 退出
+        <span class="hljs-number">1.</span> backlog: 开始一个新的backlog
+        <span class="hljs-number">2.</span> feat: 新功能（feature）
+        <span class="hljs-number">3.</span> fix: 修补bug
+        <span class="hljs-number">4.</span> docs: 文档（documentation）
+        <span class="hljs-number">5.</span> style: 格式（不影响代码运行的变动）
+        <span class="hljs-number">6.</span> refactor: 重构（即不是新增功能，也不是修改bug的代码变动）
+        <span class="hljs-number">7.</span> test: 增加测试
+        <span class="hljs-number">8.</span> chore: 构建过程或辅助工具的变动
+        <span class="hljs-number">0.</span> quit: 退出
 
 请选择相关数字选项 [<span class="hljs-number">0</span>-<span class="hljs-number">8</span>]&gt; <span class="hljs-number">2</span>
-本次提交的范围，建议填写版本号 (<span class="hljs-variable">$version</span>):
+本次提交的范围，建议填写版本号 ($version):
 <span class="hljs-number">1.0</span>
 请添加简短的，必要的对本次提交的描述:
 添加《基于命令行的Git Plugin开发回顾》PPT
 添加一个完整提交的描述:
 对Git Toolkit整个项目进行一次回顾
 列出本次提交解决的、可以关闭的所有相关问题，建议使用关键字 refs 、 close:
-refs <span class="hljs-comment">#2</span>
-git commit -F .gitCOMMIT-MSG.tmp <span class="hljs-operator">-a</span>
+refs <span class="hljs-preprocessor">#<span class="hljs-number">2</span></span>
+git commit -F .gitCOMMIT-MSG.tmp -a
 [master <span class="hljs-number">57</span>ae28e] feat(<span class="hljs-number">1.0</span>): 添加《基于命令行的Git Plugin开发回顾》PPT
  <span class="hljs-number">5</span> files changed, <span class="hljs-number">281</span> insertions(+)
  create mode <span class="hljs-number">100644</span> ppts/a-review-of-plugin-git-development-based-on-the-command-line.md
@@ -239,7 +235,6 @@ git commit -F .gitCOMMIT-MSG.tmp <span class="hljs-operator">-a</span>
  create mode <span class="hljs-number">100644</span> ppts/img/git-toolkit/commit-no-message.png
  create mode <span class="hljs-number">100644</span> ppts/img/git-toolkit/tree.png
 </code></pre>
-
 </article></section></slide>
 <slide class="slide" data-transition="slide"><section class="slide-wrapper"><article>
 <h2>Hook脚本 -- commit-msg</h2>
@@ -255,7 +250,7 @@ git commit -F .gitCOMMIT-MSG.tmp <span class="hljs-operator">-a</span>
 <pre><code class="hljs stylus">git config --global core<span class="hljs-class">.hooksPath</span>
 </code></pre>
 </article></section></slide>
-<slide class="slide" data-transition="glue"><section class="slide-wrapper"><article>
+<slide class="slide far-past pageup" data-transition="glue"><section class="slide-wrapper"><article>
 <h2>目录结构</h2>
 <pre><code class="bash hljs">➜  git-toolkit git:(develop) tree
 .
@@ -274,15 +269,17 @@ git commit -F .gitCOMMIT-MSG.tmp <span class="hljs-operator">-a</span>
 </code></pre>
 
 </article></section></slide>
-<slide class="slide" data-transition="stick"><section class="slide-wrapper"><article class="flexbox vcenter">
+<slide class="slide past pageup" data-transition="stick"><section class="slide-wrapper"><article class="flexbox vcenter">
 <h1>上代码</h1>
 
 </article></section></slide>
-<slide class="slide" data-transition="move"><section class="slide-wrapper"><article class="flexbox vcenter">
+<slide class="slide current pageup" data-transition="move"><section class="slide-wrapper"><article class="flexbox vcenter">
 <h1>Shell开发神器 shellcheck</h1>
+<p>Google Shell Style Guide <a href="https://google.github.io/styleguide/shell.xml" target="_blank">英文版</a>
+<a href="http://zh-google-styleguide.readthedocs.io/en/latest/google-shell-styleguide/contents/" target="_blank">中文版</a></p>
 
 </article></section></slide>
-<slide class="slide" data-transition="newspaper"><section class="slide-wrapper"><article class="flexbox vcenter">
+<slide class="slide next pageup" data-transition="newspaper"><section class="slide-wrapper"><article class="flexbox vcenter">
 <h1>Q &amp; A</h1>
 
 </article></section></slide>
@@ -297,7 +294,7 @@ git commit -F .gitCOMMIT-MSG.tmp <span class="hljs-operator">-a</span>
     </slides>
 </div>
 <canvas id="drawBoard" class="draw-board" width="900" height="700" style="display: none;"></canvas>
-<div class="progress"><span id="progress" style="width: 3.44828%;"></span></div>
+<div class="progress"><span id="progress" style="width: 96.4286%;"></span></div>
 <div id="_buttons">
     <div class="_btn-box" id="_btn-box" style="display:none;">
         <button class="fa fa-arrow-circle-left" id="_btn-prev"></button>
