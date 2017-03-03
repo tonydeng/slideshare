@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<!-- saved from url=(0039)http://192.168.2.250:8080/md/r-poems.md -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <title>通过机器学习来写诗 - By Tony Deng</title>
+    <link rel="stylesheet" media="all" href="../stylesheets/nodeppt.css">
+    <link rel="stylesheet" media="only screen and (max-device-width: 480px)" href="../stylesheets/phone.css">
+
+    <link rel="stylesheet" href="../stylesheets/monokai_sublime.css">
+    <link rel="stylesheet" href="../stylesheets/font-awesome.css">
+
+<link rel="stylesheet" href="../stylesheets/theme.light.css">
+<script type="text/javascript" src="chrome-extension://phfplpepeojlgfgdfgfgfnmgakolcgoa/js/injected.js"></script><style id="style-1-cropbar-clipper">/* Copyright 2014 Evernote Corporation. All rights reserved. */
+.en-markup-crop-options {
+    top: 18px !important;
+    left: 50% !important;
+    margin-left: -100px !important;
+    width: 200px !important;
+    border: 2px rgba(255,255,255,.38) solid !important;
+    border-radius: 4px !important;
+}
+
+.en-markup-crop-options div div:first-of-type {
+    margin-left: 0px !important;
+}
+</style></head>
+<body style="opacity: 1;">
+<div class="slides">
+    <slides id="container">
+        <slide class="slide current pagedown" data-transition="vertical3d"><section class="slide-wrapper"><article class="flexbox vcenter">
+<h1>通过机器学习来写诗</h1>
+<p><small>Tony Deng</small></p>
+<p>Github @tonydeng</p>
+<p>Twitter @wolfdeng</p>
+<p><a href="https://tonydeng.github.io/" target="_blank">https://tonydeng.github.io</a></p>
+
+</article></section></slide>
+<slide class="slide next pagedown" data-transition="kontext"><section class="slide-wrapper"><article class="flexbox vcenter">
+<h1>机器人作诗的可能性</h1>
+
+</article></section></slide>
+<slide class="slide far-next pagedown" data-transition="kontext"><section class="slide-wrapper"><article>
+<img src="../images/r-poems/v2-30d3349e93dd0f86e273dffdb7a6c4c5_b.png" alt="robot poems">
+
+</article></section></slide>
+<slide class="slide" data-transition="kontext"><section class="slide-wrapper"><article>
+<img src="../images/r-poems/google-search-result.png" alt="google search result">
+
+</article></section></slide>
+<slide class="slide" data-transition="kontext"><section class="slide-wrapper"><article class="flexbox vcenter">
+<h1>理论支持</h1>
+
+</article></section></slide>
+<slide class="slide" data-transition="kontext"><section class="slide-wrapper"><article>
+<h2>著名的<a href="https://zh.wikipedia.org/zh-hans/%E7%84%A1%E9%99%90%E7%8C%B4%E5%AD%90%E5%AE%9A%E7%90%86" target="_blank">无限猴子定理</a></h2>
+<p>哪怕是让一只猴子在打字机上随机地按键，只要按键的时间足够长，那么几乎必然能够打出任何特定的文字，甚至是莎士比亚的全套著作。</p>
+<img src="../images/r-poems/Monkey-typing.jpg" alt="Monkey typing">
+
+</article></section></slide>
+<slide class="slide" data-transition="kontext"><section class="slide-wrapper"><article>
+<h2><a href="https://zh.wikipedia.org/wiki/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0" target="_blank">机器学习</a>的各种<a href="https://tonydeng.github.io/2017/03/03/common-algorithms-for-machine-learning/" target="_blank">算法</a>和相关工具的发展</h2>
+<pre><code class="hljs">有监督学习（分类，回归）
+↕
+半监督学习（分类，回归）
+↕
+半监督聚类（有标签数据的标签不是确定的，类似于：肯定不是xxx，很可能是yyy）
+↕
+无监督学习（聚类）
+</code></pre>
+</article></section></slide>
+<slide class="slide" data-transition="kontext"><section class="slide-wrapper"><article class="flexbox vcenter">
+<h1>使用R来写诗</h1>
+
+</article></section></slide>
+<slide class="slide" data-transition="kontext"><section class="slide-wrapper"><article>
+<img src="https://static1.squarespace.com/static/538cea80e4b00f1fad490c1b/t/56362947e4b06c8363ef3f37/1446390088461/?format=1500w" alt="R logo">
+<p>R语言，一种自由软件编程语言与操作环境，主要用于统计分析、绘图、数据挖掘。</p>
+
+</article></section></slide>
+<slide class="slide" data-transition="kontext"><section class="slide-wrapper"><article>
+<h2>基本步骤</h2>
+
+</article></section></slide>
+<slide class="slide" data-transition="kontext"><section class="slide-wrapper"><article>
+<h3>在语料库<a href="https://github.com/rime-aca/corpus" target="_blank">corpus</a>中选择<a href="https://raw.githubusercontent.com/rime-aca/corpus/master/%E5%AE%8B%E8%A9%9E%E4%B8%89%E7%99%BE%E9%A6%96.txt" target="_blank">一个语料库</a></h3>
+<pre><code class="bash hljs">wget <span class="hljs-string">'https://raw.githubusercontent.com/rime-aca/corpus/master/宋詞三百首.txt'</span> -O training.txt
+</code></pre>
+
+</article></section></slide>
+<slide class="slide" data-transition="kontext"><section class="slide-wrapper"><article>
+<h3>加载文件</h3>
+<pre><code class="R hljs">fileName &lt;- <span class="hljs-string">"training.txt"</span>
+
+SC &lt;- readChar(fileName, file.info(fileName)$size)
+</code></pre>
+
+</article></section></slide>
+<slide class="slide" data-transition="kontext"><section class="slide-wrapper"><article>
+<h3>安装并使用<a href="https://www.r-project.org/nosvn/pandoc/jiebaR.html" target="_blank">jiebaR</a></h3>
+<pre><code class="R hljs">install.packages(<span class="hljs-string">'jiebaR'</span>)
+
+<span class="hljs-keyword">library</span>(jiebaR)
+</code></pre>
+
+</article></section></slide>
+<slide class="slide" data-transition="kontext"><section class="slide-wrapper"><article>
+<h3>分词并进行<a href="https://zh.wikipedia.org/wiki/TF-IDF" target="_blank">TF-IDF</a>（词频分析）</h3>
+<pre><code class="R hljs">cc = worker()
+
+analysis &lt;- as.data.frame(table(cc[SC]))
+
+<span class="hljs-comment"># 重新排序</span>
+analysis &lt;- analysis[order(-analysis$Freq),]
+
+<span class="hljs-comment"># 简单改变一下文件的命名、格式</span>
+names(analysis) &lt;- c(<span class="hljs-string">"word"</span>,<span class="hljs-string">"freq"</span>)
+analysis$word &lt;- as.character(analysis$word)
+</code></pre>
+
+</article></section></slide>
+<slide class="slide" data-transition="kontext"><section class="slide-wrapper"><article>
+<h3>分词和频率结果</h3>
+<img src="../images/r-poems/analysis.png" alt="analysis">
+
+</article></section></slide>
+<slide class="slide" data-transition="kontext"><section class="slide-wrapper"><article>
+<h3>可视化效果</h3>
+<img src="../images/r-poems/wordcloud-1.png" alt="一个字">
+
+</article></section></slide>
+<slide class="slide" data-transition="kontext"><section class="slide-wrapper"><article>
+<img src="../images/r-poems/wordcloud-2.png" alt="两个字">
+
+</article></section></slide>
+<slide class="slide" data-transition="kontext"><section class="slide-wrapper"><article>
+<img src="../images/r-poems/wordcloud-3.png" alt="三个字">
+
+</article></section></slide>
+<slide class="slide" data-transition="kontext"><section class="slide-wrapper"><article>
+<h3>定义一个词牌</h3>
+<p>李白的《清平乐·画堂晨起》作为范例</p>
+<blockquote>
+<p>画堂晨起，来报雪花坠。高卷帘栊看佳瑞，皓色远迷庭砌。盛气光引炉烟，素草寒生玉佩。应是天仙狂醉，乱把白云揉碎。</p>
+</blockquote>
+
+</article></section></slide>
+<slide class="slide" data-transition="kontext"><section class="slide-wrapper"><article>
+<h3>对词牌进行分词后，再分析一下各部分的词性</h3>
+<pre><code class="R hljs">tagger &lt;- worker(<span class="hljs-string">"tag"</span>)
+cipai_2 &lt;- tagger &lt;= cipai
+</code></pre>
+
+</article></section></slide>
+<slide class="slide" data-transition="kontext"><section class="slide-wrapper"><article>
+<h3>查看词性分析结果</h3>
+<pre><code class="hljs stata">&gt; cipai_2
+     <span class="hljs-keyword">n</span>      x      x      <span class="hljs-keyword">n</span>      v      a      <span class="hljs-keyword">n</span>      <span class="hljs-keyword">g</span>      v      x      x      a      v      x      <span class="hljs-keyword">n</span>
+<span class="hljs-string">"画堂"</span> <span class="hljs-string">"晨起"</span> <span class="hljs-string">"来报"</span> <span class="hljs-string">"雪花"</span>   <span class="hljs-string">"坠"</span>   <span class="hljs-string">"高"</span> <span class="hljs-string">"卷帘"</span>   <span class="hljs-string">"栊"</span>   <span class="hljs-string">"看"</span> <span class="hljs-string">"佳瑞"</span> <span class="hljs-string">"皓色"</span>   <span class="hljs-string">"远"</span>   <span class="hljs-string">"迷"</span> <span class="hljs-string">"庭砌"</span> <span class="hljs-string">"盛气"</span>
+     x      x      x      x     nr      x      <span class="hljs-keyword">n</span>      x      <span class="hljs-keyword">d</span>      p     nr      v
+<span class="hljs-string">"光引"</span> <span class="hljs-string">"炉烟"</span> <span class="hljs-string">"素草"</span> <span class="hljs-string">"寒生"</span> <span class="hljs-string">"玉佩"</span> <span class="hljs-string">"应是"</span> <span class="hljs-string">"天仙"</span> <span class="hljs-string">"狂醉"</span>   <span class="hljs-string">"乱"</span>   <span class="hljs-string">"把"</span> <span class="hljs-string">"白云"</span> <span class="hljs-string">"揉碎"</span>
+</code></pre>
+</article></section></slide>
+<slide class="slide" data-transition="kontext"><section class="slide-wrapper"><article>
+<h3>分辨词语的词性，参见<a href="http://www.cnblogs.com/finallyliuyu/p/3925186.html" target="_blank">北大计算所词性标注集简表</a></h3>
+<ol>
+<li>n是名词</li>
+<li>v是动词</li>
+<li>a是形容词</li>
+<li>nr 人名 名词代码n和“人(ren)”的声母并在一起</li>
+<li>p 介词 取英语介词prepositional的第1个字母</li>
+<li>q 量词 取英语quantity的第1个字母</li>
+<li>x 非语素字 非语素字只是一个符号，字母x通常用于代表未知数、符号</li>
+</ol>
+
+</article></section></slide>
+<slide class="slide" data-transition="kontext"><section class="slide-wrapper"><article>
+<h3>在词频库中，选取了至少出现过两次的一字或两字词语，作为诗词创作的素材库</h3>
+<pre><code class="R hljs">example &lt;- subset(analysis, freq &gt;<span class="hljs-number">1</span> &amp; nchar(word) &lt;<span class="hljs-number">3</span> &amp; freq &lt; <span class="hljs-number">300</span>)
+<span class="hljs-comment"># 提取词性文件</span>
+cixing &lt;- attributes(cipai_2)$names
+
+<span class="hljs-comment"># 将素材库进行词性分类</span>
+example_2 &lt;- tagger &lt;= example$word
+</code></pre>
+
+</article></section></slide>
+<slide class="slide" data-transition="kontext"><section class="slide-wrapper"><article>
+<h3>定义诗词算法</h3>
+<p>从范本词牌的第一个词开始，随机在素材库中选取词性相同，字数相等的单词，填入提前设置好的空白字符串中。</p>
+<pre><code class="R hljs">write_perms &lt;- <span class="hljs-keyword">function</span>(m){
+  set.seed(m)
+  empty &lt;- <span class="hljs-string">""</span>
+  <span class="hljs-keyword">for</span> (i <span class="hljs-keyword">in</span> <span class="hljs-number">1</span>:length(cipai_2)){
+    temp_file &lt;- example_2[attributes(example_2)$name == cixing[i]]
+    temp_file &lt;- temp_file[nchar(temp_file) == nchar(cipai_2[i])]
+    empty &lt;- paste0(empty, sample(temp_file,<span class="hljs-number">1</span>))
+  }
+
+  result &lt;- paste0(substr(empty, <span class="hljs-number">1</span>,<span class="hljs-number">4</span>), <span class="hljs-string">","</span>, substr(empty,<span class="hljs-number">5</span>,<span class="hljs-number">9</span>),<span class="hljs-string">"。"</span>,
+                   substr(empty, <span class="hljs-number">10</span>,<span class="hljs-number">16</span>), <span class="hljs-string">","</span>, substr(empty, <span class="hljs-number">17</span>,<span class="hljs-number">22</span>),<span class="hljs-string">"。"</span>,
+                   substr(empty, <span class="hljs-number">23</span>,<span class="hljs-number">28</span>), <span class="hljs-string">","</span>, substr(empty, <span class="hljs-number">29</span>,<span class="hljs-number">34</span>),<span class="hljs-string">"。"</span>,
+                   substr(empty, <span class="hljs-number">35</span>,<span class="hljs-number">40</span>), <span class="hljs-string">","</span>, substr(empty, <span class="hljs-number">41</span>,<span class="hljs-number">46</span>),<span class="hljs-string">"。"</span>)
+
+}
+</code></pre>
+
+</article></section></slide>
+<slide class="slide" data-transition="kontext"><section class="slide-wrapper"><article>
+<h3>开始写诗</h3>
+<pre><code class="R hljs">lapply(<span class="hljs-number">1</span>:<span class="hljs-number">10</span>,write_perms)
+</code></pre>
+
+</article></section></slide>
+<slide class="slide" data-transition="kontext"><section class="slide-wrapper"><article>
+<h3>看看效果</h3>
+<blockquote>
+<p>"紅藥蟲網,可堪絃歌回。高煙雨琮兼漸老,清愁久破春山。陸游寒煙缺月,佇久初靜翩翩。應是無力難倩,欲把秋風歸來。"</p>
+</blockquote>
+
+</article></section></slide>
+<slide class="slide" data-transition="kontext"><section class="slide-wrapper"><article>
+<blockquote>
+<p>"流年清露,可堪春意要。窮陽臺旆復驚飆,驚秋慢游柳下。風光戲鼓爭知,阮郎風露鞦韆。凝笑單衣無跡,卻對碧雲不堪。"</p>
+</blockquote>
+
+</article></section></slide>
+<slide class="slide" data-transition="kontext"><section class="slide-wrapper"><article>
+<blockquote>
+<p>"春意晚涼,春山小園賦。明天際紺凍亂紅,呼燈豔搖舊處。思婦紋平不眠,清尊煙光陳跡。傷春闌干杜若,不把綺羅飛來。"</p>
+</blockquote>
+
+</article></section></slide>
+<slide class="slide" data-transition="kontext"><section class="slide-wrapper"><article>
+<blockquote>
+<p>"暗想晏殊,猶唱酒杯調。重金井笮映倦客,疏煙滿聽怨極。紅樓更苦帳飲,老來雲淡蓬壺。情傷驟雨候館,漸因秋千執手。"</p>
+</blockquote>
+
+</article></section></slide>
+<slide class="slide" data-transition="kontext"><section class="slide-wrapper"><article>
+<blockquote>
+<p>"笙歌千樹,葉葉樓頭斷。黑簫聲燼遊不眠,修竹細隨舊香。歸路千縷春衫,行盡驚秋秋水。雪滿金風輕寒,曾向寶馬生怕。"</p>
+</blockquote>
+
+</article></section></slide>
+<slide class="slide" data-transition="kontext"><section class="slide-wrapper"><article>
+<blockquote>
+<p>"殘酒游絲,斜日殘花側。酥夜色燼梳蔣捷,夢短慳能袁去。綠樹香暖花院,淒楚還被凌雲。怨慢人心朝天,便比杜鵑獨立。"</p>
+</blockquote>
+
+</article></section></slide>
+<slide class="slide" data-transition="kontext"><section class="slide-wrapper"><article>
+<blockquote>
+<p>"征塵此身,殘醉思量墜。脆瑤臺囀露更聞,淚滿慢駐香徑。酒旗夢魂舊香,晏殊珠箔杜鵑。梅邊脈脈紫萸,遽憑燕子浮生。"</p>
+</blockquote>
+
+</article></section></slide>
+<slide class="slide" data-transition="kontext"><section class="slide-wrapper"><article>
+<blockquote>
+<p>"淚珠清愁,亭皋飛雨偷。巧亂鴉笮爭那回,更苦近蕩經年。飛花已失姜夔,斜日尋處丁寧。如水風味六州,曾因朱門年少。"</p>
+</blockquote>
+
+</article></section></slide>
+<slide class="slide" data-transition="kontext"><section class="slide-wrapper"><article>
+<blockquote>
+<p>"行雲朱戶,清愁細雨定。孤雕鞍髻謾佇久,朝天冷沒枝上。情懷何世當樓,爭知曾題碧雲。宴清春風暗雨,不同夜闌開時。"</p>
+</blockquote>
+
+</article></section></slide>
+<slide class="slide" data-transition="kontext"><section class="slide-wrapper"><article>
+<blockquote>
+<p>"啼鶯中酒,多麗紅情想。慢畫堂艤關芳酒,難倩淡如李甲。枝頭多麗春去,斜日翠綃秋千。相倚層樓隋堤,共被柳絲睡起。"</p>
+</blockquote>
+
+</article></section></slide>
+<slide class="slide" data-transition="kontext"><section class="slide-wrapper"><article>
+<h3>PS: 关于简体和繁体转换</h3>
+<p>可以使用<a href="https://github.com/BYVoid/OpenCC" target="_blank">opencc</a> 简繁体转换，转换测试地址：<a href="http://opencc.byvoid.com/" target="_blank">http://opencc.byvoid.com</a> 。R也有相应的包<a href="https://github.com/qinwf/ropencc" target="_blank">ropencc</a>,相关使用可以查看这篇文章：<a href="http://cn.qinwenfeng.com/ropencc/" target="_blank">ROPENCC - OPENCC 繁简转换 R 语言接口</a></p>
+
+</article></section></slide>
+<slide class="slide" data-transition="kontext"><section class="slide-wrapper"><article class="flexbox vcenter">
+<h1>Q &amp; A</h1>
+
+</article></section></slide>
+
+
+        <!-- <slide class="slide logoslide dark nobackground">
+            <article class="flexbox vcenter">
+                <h2 style="color: white;">Powered By nodePPT v1.4.2</h2>
+            </article>
+        </slide> -->
+        <div class="slideTip" id="tip"></div>
+    </slides>
+</div>
+<canvas id="drawBoard" class="draw-board" width="900" height="700" style="display: none;"></canvas>
+<div class="progress"><span id="progress" style="width: 2.7027%;"></span></div>
+<div id="_buttons">
+    <div class="_btn-box" id="_btn-box" style="display:none;">
+        <button class="fa fa-arrow-circle-left" id="_btn-prev"></button>
+        <button class="fa fa-arrow-circle-right" id="_btn-next"></button>
+        <button class="fa fa-paint-brush" id="_btn-brush"></button>
+        <button class="fa fa-compress" id="_btn-overview" data-toggle="fa fa-expand"></button>
+    </div>
+    <button class="fa fa-bars" id="_btn-bar" data-toggle="fa fa-close"></button>
+</div>
+<script src="../javascripts/mix.0.3.0.min.js"></script>
+<script>
+var base = location.protocol + '//' + location.host;
+
+MixJS.config({
+    baseURL: [ base, 'javascripts'].join('/')+'/'
+});
+
+</script>
+<script src="../javascripts/broadcast.js"></script>
+<script src="../javascripts/nodeppt.js"></script>
+<script>
+Slide.init({
+    containerID: 'container',
+    drawBoardID: 'drawBoard',
+    slideClass: '.slide',
+    buildClass: '.build',
+    progressID: 'progress',
+    transition: 'cover-diamond',
+    width: 1100,
+    dir: './',
+
+    //打开下面的注释就开启postMessage方式
+    //访问网址127.0.0.1:8080/ppt/demo#client
+    control:{
+        type: 'postMessage',
+        args:{
+            isControl:  false
+        }
+    },
+
+    tipID: 'tip'
+});
+MixJS.loadJS('highlight/highlight.pack.js',function(){
+    hljs.tabReplace = '  ';
+    hljs.initHighlightingOnLoad();
+});
+</script>
+
+
+<!--placeholder-->
+
+
+<div class="img-full transparent"></div></body></html>
