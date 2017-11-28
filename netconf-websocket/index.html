@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<!-- saved from url=(0048)http://172.24.47.11:8080/md/netconf-websocket.md -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <title>NETCONF over WebSocket - By Tony Deng</title>
+    <link rel="stylesheet" media="all"  href="../stylesheets/nodeppt.css">
+    <link rel="stylesheet" media="only screen and (max-device-width: 480px)"  href="../stylesheets/phone.css">
+
+    <link rel="stylesheet"  href="../stylesheets/monokai_sublime.css">
+    <link rel="stylesheet"  href="../stylesheets/font-awesome.css">
+
+<link rel="stylesheet"  href="../stylesheets/theme.colors.css">
+<style id="style-1-cropbar-clipper">/* Copyright 2014 Evernote Corporation. All rights reserved. */
+.en-markup-crop-options {
+    top: 18px !important;
+    left: 50% !important;
+    margin-left: -100px !important;
+    width: 200px !important;
+    border: 2px rgba(255,255,255,.38) solid !important;
+    border-radius: 4px !important;
+}
+
+.en-markup-crop-options div div:first-of-type {
+    margin-left: 0px !important;
+}
+</style></head>
+<body style="opacity: 1;">
+<div class="slides">
+    <slides id="container">
+        <slide class="slide current pagedown" data-transition="vertical3d"><section class="slide-wrapper"><article class="flexbox vcenter">
+<h1>NETCONF over WebSocket</h1>
+<p><a href="https://tools.ietf.org/html/draft-iijima-netconf-websocket-ps-04" target="_blank">（https://tools.ietf.org/html/draft-iijima-netconf-websocket-ps-04）</a></p>
+<p><small>Tony Deng</small></p>
+<p>Github <a href="https://github.com/tonydeng" target="_blank">@tonydeng</a></p>
+<p>Twitter <a href="https://twitter.com/wolfdeng" target="_blank">@wolfdeng</a></p>
+<p>Blog <a href="https://tonydeng.github.io/" target="_blank">TonyDeng's Blog</a></p>
+
+</article></section></slide>
+<slide class="slide next pagedown" data-transition="kontext"><section class="slide-wrapper"><article class="flexbox vcenter">
+<h1>Changes since the last IETF meeting</h1>
+<ul>
+<li>As per comments received at the last IETF metting, we’ve made following changes.<ul>
+<li>Changed description about NETCONF username.<ul>
+<li>We propose extracting information about NETCONF username from TLS. Websocket needs TLS for ensuring security. Thus, using information is TLS is necessary in order to ensure that NETCONF user is very person who is authenticate by TLS(certificate).</li>
+<li>We think, for this purpose, complying with Mr.Badra’s ID is the best approach since reinventing the wheel is not welcomed.
+-</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+</article></section></slide>
+<slide class="slide far-next pagedown" data-transition="kontext"><section class="slide-wrapper"><article class="flexbox vcenter">
+<h1>NETCONF username from TLS</h1>
+<ul>
+<li>I haven't implemented all of the Mr.Badra's algorithms yet. But l've confirmed that it's possible for a NETCONF server supporting WebSocket to get TLS Certificate during TLS handshake by, for example, using HTTP server's API, or seeing SSL_Context through SSL_socket.</li>
+<li><p>NETCONF server example.</p>
+<pre><code class="java hljs"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">NetconfWebSocketServlet</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">WebSocketServlet</span></span>{
+  <span class="hljs-annotation">@Override</span>
+  <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">doGet</span><span class="hljs-params">(HttpServletRequest req, HttpServletResponse res)</span></span>{
+      X509Certificate[] certificates = (X509Certificate[])req.getAttribute(<span class="hljs-string">"...X509Certificate"</span>);
+      <span class="hljs-comment">// NETCONF server can see client's TLS certificate sent during TLS handshake here.</span>
+  }
+
+  <span class="hljs-annotation">@Override</span>
+  <span class="hljs-function"><span class="hljs-keyword">public</span> WebSocket <span class="hljs-title">doWebSocketConnect</span><span class="hljs-params">(HttpServletRequest req, String protocol)</span></span>{
+      <span class="hljs-comment">//NETCONF server can see messages sent over WebSocket here.</span>
+  }
+}
+</code></pre>
+</li>
+</ul>
+
+</article></section></slide>
+<slide class="slide" data-transition="kontext"><section class="slide-wrapper"><article class="flexbox vcenter">
+<h1>NETCONF message</h1>
+<img src="/images/netconf-websocket/netconf-message.jpg" alt="netconf message">
+
+</article></section></slide>
+<slide class="slide" data-transition="kontext"><section class="slide-wrapper"><article class="flexbox vcenter">
+<h1>Conclusions</h1>
+<ul>
+<li>We proposed a way of sending NETCONF over WebSocket protocol.</li>
+<li>We proposed extracting NetconfWebSocketServlet username from TLS, that is complying with Mr.Badra's algorithms.</li>
+<li>Does WG have interests?</li>
+<li>If YES, should this I-D move forward as an Experimental I-D?</li>
+</ul>
+
+</article></section></slide>
+<slide class="slide" data-transition="kontext"><section class="slide-wrapper"><article class="flexbox vcenter">
+<h1>Reference</h1>
+<ol>
+<li><a href="https://tools.ietf.org/html/draft-iijima-netconf-websocket-ps-04" target="_blank">NETCONF over WebSocket draft-iijima-netconf-websocket-ps-04</a></li>
+<li><a href="http://slideplayer.com/slide/8667609/" target="_blank">Hiroyasu Kimura, Yoshifumi Atarashi, and Hidemitsu Higuchi</a></li>
+</ol>
+
+</article></section></slide>
+
+
+        <!-- <slide class="slide logoslide dark nobackground">
+            <article class="flexbox vcenter">
+                <h2 style="color: white;">Powered By nodePPT v1.4.2</h2>
+            </article>
+        </slide> -->
+        <div class="slideTip" id="tip"></div>
+    </slides>
+</div>
+<canvas id="drawBoard" class="draw-board" width="900" height="700" style="display: none;"></canvas>
+<div class="progress"><span id="progress" style="width: 16.6667%;"></span></div>
+<div id="_buttons">
+    <div class="_btn-box" id="_btn-box" style="display:none;">
+        <button class="fa fa-arrow-circle-left" id="_btn-prev"></button>
+        <button class="fa fa-arrow-circle-right" id="_btn-next"></button>
+        <button class="fa fa-paint-brush" id="_btn-brush"></button>
+        <button class="fa fa-compress" id="_btn-overview" data-toggle="fa fa-expand"></button>
+    </div>
+    <button class="fa fa-bars" id="_btn-bar" data-toggle="fa fa-close"></button>
+</div>
+<script src="../javascripts/mix.0.3.0.min.js"></script>
+<script>
+var base = location.protocol + '//' + location.host;
+
+MixJS.config({
+    baseURL: [ base, 'javascripts'].join('/')+'/'
+});
+
+</script>
+<script src="../javascripts/broadcast.js"></script>
+<script src="../javascripts/nodeppt.js"></script>
+<script>
+Slide.init({
+    containerID: 'container',
+    drawBoardID: 'drawBoard',
+    slideClass: '.slide',
+    buildClass: '.build',
+    progressID: 'progress',
+    transition: 'cover-diamond',
+    width: 1100,
+    dir: './',
+
+    //打开下面的注释就开启postMessage方式
+    //访问网址127.0.0.1:8080/ppt/demo#client
+    control:{
+        type: 'postMessage',
+        args:{
+            isControl:  false
+        }
+    },
+
+    tipID: 'tip'
+});
+MixJS.loadJS('highlight/highlight.pack.js',function(){
+    hljs.tabReplace = '  ';
+    hljs.initHighlightingOnLoad();
+});
+</script>
+
+
+<!--placeholder-->
+
+
+<div class="img-full transparent"></div></body></html>
